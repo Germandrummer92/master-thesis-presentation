@@ -1,0 +1,74 @@
+%% Encoding: ISO8859-1 %%
+
+%% LaTeX-Beamer template for KIT design
+%% by Erik Burger, Christian Hammer
+%%
+%% modified by Christian Henrich for IKS
+%%
+%% version 1.2
+%%
+%% mostly compatible to KIT corporate design v1.2
+%% http://www.uni-karlsruhe.de/download/uka/Gestaltungsrichtlinien_komplett.pdf
+%%
+%% Problems, bugs and comments to
+%% burger@ipd.uka.de
+
+\documentclass[18pt]{beamer}
+\usetheme{kit}
+
+% remove the following line for German date style and logos
+
+% if a custom picture is to be used on the title page, copy it into the 'logos'
+% directory, in the line below, replace 'mypicture' with the 
+% filename (without extension) and uncomment the line
+
+% \renewcommand{\titleimage}{mypicture}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{ marvosym }
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\cfbox}[2]{%
+    \colorlet{currentcolor}{.}%
+    {\color{#1}%
+    \fbox{\color{currentcolor}#2}}%
+}
+% (picture proportions: 63 : 20, *.eps format if you use latex+dvips+ps2pdf,
+% *.jpg/*.png/*.pdf if you use pdflatex)
+
+% if you want to see BibTeX keys in the references view instead of the symbol,
+% uncomment the following line
+% \usebibitemtemplate{\insertbiblabel}
+
+% the presentation starts here
+
+\title[Online Neural Network-based Language Identification]{Online Neural Network-based Language Identification}
+\subtitle{Master's Thesis}
+\author{Daniel H. Draper}
+
+\institute[ISL]{Interactive Systems Lab - Institute for Anthropomatics and Robotics}
+\setcounter{tocdepth}{1}
+\begin{document}
+
+\selectlanguage{english} % in der Regel einfach auskommentiert da stehen lassen
+%\selectlanguage{ngerman} % in der Regel einfach auskommentiert da stehen lassen
+%title page
+\begin{frame}
+\titlepage
+\end{frame}
+
+%table of contents
+\frame{
+\frametitle{Contents}
+\tableofcontents
+}
+
+\include{vortrag}
+
+\frame[allowframebreaks]{
+\frametitle{References}
+\bibliography{example}
+%\bibliographystyle{plain} %does not render "url" fields...
+\bibliographystyle{IEEEtran}  %does render "url" fields, requires "_"s and "#"s to be escaped, e.g. "\_".
+}
+\end{document}
