@@ -25,8 +25,12 @@
 % \renewcommand{\titleimage}{mypicture}
 \usepackage{color}
 \usepackage{tikz}
-\usepackage{ marvosym }
-\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+\usetikzlibrary{arrows.meta}
+\usepackage{marvosym}
+\usepackage{multimedia}
+\def\checkmark{\tikz\fill[green][scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\xmark}{\color{red}{\ding{55}}}%
 \DeclareMathOperator*{\argmax}{arg\,max}
 \newcommand{\cfbox}[2]{%
     \colorlet{currentcolor}{.}%
@@ -70,5 +74,27 @@
 \bibliography{example}
 %\bibliographystyle{plain} %does not render "url" fields...
 \bibliographystyle{IEEEtran}  %does render "url" fields, requires "_"s and "#"s to be escaped, e.g. "\_".
+}
+\frame{
+\frametitle{Theory of LID}
+\begin{itemize}
+\item Given input \(S = \{ s(1), s(2), \dots , s(T)\}\), \(\{L_1,L_2,\dots,L_N\}\)
+\end{itemize}
+\pause
+\begin{exampleblock}{Formulation of LID Task\cite{6451097}}
+\(L^O = \argmax_I p(S|L_I)\)\newline
+With segmentation into phones \(\upsilon\) (sequence \(\Upsilon\)):\newline
+\pause
+\(L^O = \argmax_I P(\Upsilon|L_I)\)\newline
+With Viterbi decoding on set of phone models \(M\):\newline
+\pause
+\(\Upsilon^O = \argmax_{\upsilon} P(S|\upsilon, M)\)\newline
+Combining last 2 equations:\newline
+\pause
+\cfbox{red}{
+\begin{minipage}{4 in}
+\(L^O = \argmax_{I}\sum_{\forall \Upsilon}P(S|\Upsilon, M)P(\Upsilon|L_I)\)
+\end{minipage}}
+\end{exampleblock}
 }
 \end{document}

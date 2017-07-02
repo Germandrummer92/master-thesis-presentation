@@ -31,7 +31,7 @@
 \begin{block}{\includegraphics[width=0.2\textwidth,height=0.08\textwidth]{bilder/EUParl}\huge{European Parliament}}
 \begin{center}
 \begin{itemize}
-\item SLT already employed consistently\cite{tcstar}
+\item Attempts to replace translators with SLT \cite{tcstar}
 \pause
 \item Many languages challenging, great potential.
 \end{itemize}
@@ -45,8 +45,9 @@
 \begin{block}{Historically}
 \begin{center}
 \begin{itemize}
-\item PRLM\footnote{single-language phone recognition followed by language-dependent,
-interpolated n-gram language modeling}, PPRM\footnote{multiple single-language phone recognizers and language-dependent parallel phone recognition}\cite{zissman1996comparison}
+\item single-language phone recognition followed by language-dependent,
+interpolated n-gram language modeling (PRLM)\cite{zissman1996comparison}
+\item multiple single-language phone recognizers and language-dependent parallel phone recognition (PPRM)\cite{zissman1996comparison}
 \pause
 \item Gaussian Mixture Models (GMM)s \cite{torres2002approaches}
 \end{itemize}
@@ -58,7 +59,7 @@ interpolated n-gram language modeling}, PPRM\footnote{multiple single-language p
 \begin{block}{Modern Approaches}
 \begin{center}
 \begin{itemize}
-\item VSM\footnote{Vector Space Modelling} + PPRM\cite{4032773}
+\item Vector Space Modelling + PPRM\cite{4032773}
 \pause
 \item I-Vector approaches\cite{6680440}\cite{d2012phonotactic}
 \end{itemize}
@@ -79,32 +80,8 @@ interpolated n-gram language modeling}, PPRM\footnote{multiple single-language p
 \hrulefill
 \pause
 \begin{itemize}
-\item Experimental baseline setup from Markus \cite{Mueller2016b}: ''Language Adaptive DNNs for Improved Low Resource Speech Recognition``
+\item Markus \cite{Mueller2016b}: ''Language Adaptive DNNs for Improved Low Resource Speech Recognition``, experimental setup very similar (LFV/LID)
 \end{itemize}
-}
-
-\section{Theory of LID}
-\frame{
-\frametitle{Theory of LID}
-\begin{itemize}
-\item Given input \(S = \{ s(1), s(2), \dots , s(T)\}\), \(\{L_1,L_2,\dots,L_N\}\)
-\end{itemize}
-\pause
-\begin{exampleblock}{Formulation of LID Task\cite{6451097}}
-\(L^O = \argmax_I p(S|L_I)\)\newline
-With segmentation into phones \(\upsilon\) (sequence \(\Upsilon\)):\newline
-\pause
-\(L^O = \argmax_I P(\Upsilon|L_I)\)\newline
-With Viterbi decoding on set of phone models \(M\):\newline
-\pause
-\(\Upsilon^O = \argmax_{\upsilon} P(S|\upsilon, M)\)\newline
-Combining last 2 equations:\newline
-\pause
-\cfbox{red}{
-\begin{minipage}{4 in}
-\(L^O = \argmax_{I}\sum_{\forall \Upsilon}P(S|\Upsilon, M)P(\Upsilon|L_I)\)
-\end{minipage}}
-\end{exampleblock}
 }
 
 \section{Experimental Setup}
@@ -216,7 +193,7 @@ coordinate(l5_2tl) -- (4,-3.25);
 \begin{itemize}
 \item 10 Languages (EN, FR, DE, AR, ES, IT, PO, PT, RU, TR)
 \item Original Corpus: 72h / Language, Reduced corpus: 18h / Language (Random Sampling of 10.000 speakers)
-\item 80 \% train data, 10 \% each dev/test set.
+\item 80 \% train data, 10 \% each dev/test set
 \end{itemize}
 \end{center}
 \end{block}
@@ -224,9 +201,9 @@ coordinate(l5_2tl) -- (4,-3.25);
 \begin{block}{Lecture Data}
 \begin{center}
 \begin{itemize}
-\item 3 Languages (EN, FR, DE) ~10h per language.
+\item 3 Languages (EN, FR, DE) \(\approx\)10h per language.
 \item KIT lectures, InterACT25, DGA talks
-\item Evaluation of EUNews results, Proof-of-concept for Lecture Translator integration.
+\item Validation of Euronews results, ``right'' patterns learned (different environment)
 \end{itemize}
 \end{center}
 \end{block}
@@ -237,8 +214,8 @@ coordinate(l5_2tl) -- (4,-3.25);
 \begin{center}
 \begin{itemize}
 \item 7 Languages (EN, FR, DE, ES, IT, PO, PT) 3.6h per language
-\item Simultaneous translation of all EUParliament speeches
-\item Further Evaluation, Proof-of-concept for EUParl integration.
+\item Simultaneous translation of all parliament speeches
+\item Further Validation, Proof-of-concept for Lecture Translator integration
 \end{itemize}
 \end{center}
 \end{block}
@@ -246,32 +223,427 @@ coordinate(l5_2tl) -- (4,-3.25);
 \subsection{Feature Extraction}
 \frame{
 \frametitle{Feature Extraction}
+\begin{block}{Feature Definition}
+\begin{center}
+\begin{itemize}
+\item Samplerate: 16 kHz
+\pause
+\item Standard Janus Capabilities: 
+\begin{itemize}
+\item POWER
+\item lMEL
+\item PITCH
+\item TON
+\end{itemize}
+\pause
+\item Context of 6 frames
+\end{itemize}
+\end{center}
+\end{block}
 }
 \frame{
 \frametitle{DBNF}
+\begin{columns}[t,onlytextwidth]
+\column{.5\textwidth}
+\tikzstyle{layer}=[draw=black,fill=black!30]
+\tikzstyle{layerlid}=[draw=black,fill=green!30]
+\tikzstyle{dots}=[draw=black,fill=black]
+\begin{tikzpicture}[scale=0.8,baseline=(current bounding box.north)]
+
+   % Bottle-neck stack
+
+
+   \draw (1.5,-2.25) node {DBNF};
+% BNF Layers
+
+   \fill[layer] (2.5,-1.5) coordinate(l4bl) -- (3,-1.5) coordinate(l4br)
+-- (3,1.5) coordinate(l4tr) -- (2.5,1.5) coordinate(l4tl) -- (2.5,-1.5);
+
+   \draw[dots] (2,0) circle (0.045);
+   \draw[dots] (2.175,0) circle (0.045);
+   \draw[dots] (1.825,0) circle (0.045);
+
+   \fill[layer] (1,-1.5) coordinate(l2bl) -- (1.5,-1.5) coordinate(l2br)
+-- (1.5,1.5) coordinate(l2tr) -- (1,1.5) coordinate(l2tl) -- (1,-1.5);
+   \fill[layer] (0,-1.5) coordinate(l1bl) -- (0.5,-1.5) coordinate(l1br)
+-- (0.5,1.5) coordinate(l1tr) -- (0,1.5) coordinate(l1tl) -- (0,-1.5);
+
+   \draw (l1tr) -- (l2bl);
+   \draw (l1br) -- (l2tl);
+
+\end{tikzpicture}
+\column{.5\textwidth}
+\begin{center}
+\begin{block}{DBNF}
+\begin{center}
+\begin{itemize}
+\item AF Stack as input
+\pause
+\item Targets context-dependent phoneme states
+\pause
+\item 6 layers, each 1000 neurons
+\pause
+\item BNF of 42 dimensions
+\pause
+\item Stacked with context of 11 frames
+\end{itemize}
+\end{center}
+\end{block}
+\end{center}
+\end{columns}
 }
 \subsection{DNN structure}
 \frame{
-\frametitle{DNN Structure}
+\frametitle{Context Spread}
+\begin{columns}[t,onlytextwidth]
+\column{.5\textwidth}
+\tikzstyle{frame}=[draw=black,fill=black!80]
+\tikzstyle{framespread}=[draw=black,fill=black!10]
+\tikzstyle{dots}=[draw=black,fill=black]
+\begin{tikzpicture}[scale=0.8,baseline=(current bounding box.north)]
+
+%%%% SPREAD 1
+\draw (1.5,-1.0) node {Spread of 1};
+
+ \draw[dots] (-1.05,0) circle (0.045);
+ \draw[dots] (-0.7,0) circle (0.045);
+ \draw[dots] (-0.35,0) circle (0.045);
+
+\fill[frame] (0,-0.5) coordinate(l1bl) -- (0.5,-0.5) coordinate(l1br)
+-- (0.5,0.5) coordinate(l1tr) -- (0,0.5) coordinate(l1tl) -- (0,0.5);
+
+\fill[frame] (0.75,-0.5) coordinate(l2bl) -- (1.25,-0.5) coordinate(l2br)
+-- (1.25,0.5) coordinate(l2tr) -- (0.75,0.5) coordinate(l2tl) -- (0.75,0.5);
+
+\fill[frame] (1.5,-0.5) coordinate(l3bl) -- (2,-0.5) coordinate(l3br)
+-- (2.0,0.5) coordinate(l3tr) -- (1.5,0.5) coordinate(l3tl) -- (1.5,0.5);
+
+\fill[frame] (2.25,-0.5) coordinate(l4bl) -- (2.75,-0.5) coordinate(l4br)
+-- (2.75,0.5) coordinate(l4tr) -- (2.25,0.5) coordinate(l4tl) -- (2.25,0.5);
+
+\fill[frame] (3,-0.5) coordinate(l5bl) -- (3.5,-0.5) coordinate(l5br)
+-- (3.5,0.5) coordinate(l5tr) -- (3,0.5) coordinate(l5tl) -- (3,0.5);
+
+ \draw[dots] (3.85,0) circle (0.045);
+ \draw[dots] (4.2,0) circle (0.045);
+ \draw[dots] (4.55,0) circle (0.045);
+
+%%%% SPREAD 2
+\draw (1.5,-3) node {Spread of 2};
+
+ \draw[dots] (-1.05,-2) circle (0.045);
+ \draw[dots] (-0.7,-2) circle (0.045);
+ \draw[dots] (-0.35,-2) circle (0.045);
+
+\fill[frame] (0,-2.5) coordinate(l6bl) -- (0.5,-2.5) coordinate(l6br)
+-- (0.5,-1.5) coordinate(l6tr) -- (0,-1.5) coordinate(l6tl) -- (0,-1.5);
+
+\fill[framespread] (0.75,-2.5) coordinate(l7bl) -- (1.25,-2.5) coordinate(l7br)
+-- (1.25,-1.5) coordinate(l7tr) -- (0.75,-1.5) coordinate(l7tl) -- (0.75,-1.5);
+
+\fill[frame] (1.5,-2.5) coordinate(l8bl) -- (2,-2.5) coordinate(l8br)
+-- (2.0,-1.5) coordinate(l8tr) -- (1.5,-1.5) coordinate(l8tl) -- (1.5,-1.5);
+
+\fill[framespread] (2.25,-2.5) coordinate(l9bl) -- (2.75,-2.5) coordinate(l9br)
+-- (2.75,-1.5) coordinate(l9tr) -- (2.25,-1.5) coordinate(l9tl) -- (2.25,-1.5);
+
+\fill[frame] (3,-2.5) coordinate(l10bl) -- (3.5,-2.5) coordinate(l10br)
+-- (3.5,-1.5) coordinate(l10tr) -- (3,-1.5) coordinate(l10tl) -- (3,-1.5);
+
+ \draw[dots] (3.85,-2) circle (0.045);
+ \draw[dots] (4.2,-2) circle (0.045);
+ \draw[dots] (4.55,-2) circle (0.045);
+
+%%%% SPREAD 3
+\draw (1.5,-5) node {Spread of 3};
+
+ \draw[dots] (-1.05,-4) circle (0.045);
+ \draw[dots] (-0.7,-4) circle (0.045);s
+ \draw[dots] (-0.35,-4) circle (0.045);
+
+\fill[frame] (0,-4.5) coordinate(l11bl) -- (0.5,-4.5) coordinate(l11br)
+-- (0.5,-3.5) coordinate(l11tr) -- (0,-3.5) coordinate(l11tl) -- (0,-3.5);
+
+\fill[framespread] (0.75,-4.5) coordinate(l12bl) -- (1.25,-4.5) coordinate(l12br)
+-- (1.25,-3.5) coordinate(l12tr) -- (0.75,-3.5) coordinate(l12tl) -- (0.75,-3.5);
+
+\fill[framespread] (1.5,-4.5) coordinate(l13bl) -- (2,-4.5) coordinate(l13br)
+-- (2.0,-3.5) coordinate(l13tr) -- (1.5,-3.5) coordinate(l13tl) -- (1.5,-3.5);
+
+\fill[frame] (2.25,-4.5) coordinate(l14bl) -- (2.75,-4.5) coordinate(l14br)
+-- (2.75,-3.5) coordinate(l14tr) -- (2.25,-3.5) coordinate(l14tl) -- (2.25,-3.5);
+
+\fill[framespread] (3,-4.5) coordinate(l15bl) -- (3.5,-4.5) coordinate(l15br)
+-- (3.5,-3.5) coordinate(l15tr) -- (3,-3.5) coordinate(l15tl) -- (3,-3.5);
+
+ \draw[dots] (3.85,-4) circle (0.045);
+ \draw[dots] (4.2,-4) circle (0.045);
+ \draw[dots] (4.55,-4) circle (0.045);
+
+
+%% fix missing links
+   \draw (l1tl) -- (l1bl);
+   \draw (l2tl) -- (l2bl);
+   \draw (l3tl) -- (l3bl);
+   \draw (l4tl) -- (l4bl);
+   \draw (l5tl) -- (l5bl);
+   \draw (l6tl) -- (l6bl);
+   \draw (l7tl) -- (l7bl);
+   \draw (l8tl) -- (l8bl);
+   \draw (l9tl) -- (l9bl);
+   \draw (l10tl) -- (l10bl);
+   \draw (l11tl) -- (l11bl);
+   \draw (l12tl) -- (l12bl);
+   \draw (l13tl) -- (l13bl);
+   \draw (l14tl) -- (l14bl);
+   \draw (l15tl) -- (l15bl);
+
+\end{tikzpicture}
+\column{.5\textwidth}
+\begin{block}{Spread Evaluation}
+\begin{center}
+\begin{itemize}
+\item In \cite{Mueller2016b}, evaluated spreads of 2,3,6 for LFV
+\pause
+\item Evaluation of spreads 4 and 5 for different nets on Euronews
+\pause
+\item Spread of 3 outperforms 4 and 5, surprisingly 5 outperforms 4
+\end{itemize}
+\end{center}
+\end{block}
+\end{columns}
 }
-\section{Demo}
 \frame{
-\frametitle{Demo}
+\frametitle{DNN Structure}
+\begin{columns}[t,onlytextwidth]
+\column{.5\textwidth}
+\tikzstyle{layer}=[draw=black,fill=black!30]
+\tikzstyle{layerlid}=[draw=black,fill=green!30]
+\tikzstyle{dots}=[draw=black,fill=black]
+\begin{tikzpicture}[scale=0.8,baseline=(current bounding box.north)]
+% DNN Layers
+
+   \fill[layer] (6,-3) coordinate(l6bl) -- (6.5,-3) coordinate(l6br) --
+(6.5,0) coordinate(l6tr) -- (6,0) coordinate(l6tl) -- (6,-3);
+   \fill[layer] (7,-3) coordinate(l7bl) -- (7.5,-3) coordinate(l7br) --
+(7.5,0) coordinate(l7tr) -- (7,0) coordinate(l7tl) -- (7,-3);
+
+   \draw[dots] (8,-1.5) circle (0.045);
+   \draw[dots] (8.175,-1.5) circle (0.045);
+   \draw[dots] (7.825,-1.5) circle (0.045);
+
+   \fill[layer] (8.5,-3) coordinate(l11bl) -- (9,-3) coordinate(l11br)
+-- (9,0) coordinate(l11tr) -- (8.5,0) coordinate(l11tl) -- (8.5,-3);
+   \fill[layer] (10.5,-2) coordinate(l12bl) -- (11,-2) coordinate(l12br)
+-- (11,-1) coordinate(l12tr) -- (10.5,-1) coordinate(l12tl) -- (10.5,-1);
+
+   \draw (10.75,2.5) node[draw=white,fill=white] {LID};
+\draw (l11tr) -- (l12bl);
+   \draw (l11br) -- (l12tl);
+\draw (l12tl) -- (l12bl);
+
+\end{tikzpicture}
+\column{.5\textwidth}
+\begin{center}
+\begin{block}{Baseline Setup}
+\begin{center}
+\begin{itemize}
+\item BNF with context as input
+\pause
+\item 5 layers of each 1000 neurons
+\pause
+\item Tanh activation, mse loss function
+\pause
+\item Mini-batches size 2,000,000, learning rate(lr) 0.01
+\pause
+\item Retrained with 1000:10 layer with lr 1
+\end{itemize}
+\end{center}
+\end{block}
+\end{center}
+\end{columns}
+}
+\section{DNN Structure}
+\frame{
+\frametitle{Evaluating Different Net Structures}
+\begin{columns}[t,onlytextwidth]
+\column{.5\textwidth}
+\tikzstyle{layer}=[draw=black,fill=black!30]
+\tikzstyle{layerlid}=[draw=black,fill=green!30]
+\tikzstyle{dots}=[draw=black,fill=black]
+   \begin{tikzpicture}[scale=0.8,baseline=(current bounding box.north)]
+
+
+   \fill[layer] (0,-1.5) coordinate(l1bl) -- (0.5,-1.5) coordinate(l1br)
+-- (0.5,1.5) coordinate(l1tr) -- (0,1.5) coordinate(l1tl) -- (0,-1.5);
+   \fill[layer] (1,-1.25) coordinate(l2bl) -- (1.5,-1.25) coordinate(l2br)
+-- (1.5,1.25) coordinate(l2tr) -- (1,1.25) coordinate(l2tl) -- (1,-1.25);
+   \fill[layer] (2,-1.0) coordinate(l3bl) -- (2.5,-1.0) coordinate(l3br)
+-- (2.5,1.0) coordinate(l3tr) -- (2,1.0) coordinate(l3tl) -- (2,-1.0);
+
+   \draw[dots] (2.625,0) circle (0.045);
+   \draw[dots] (2.75,0) circle (0.045);
+   \draw[dots] (2.875,0) circle (0.045);
+
+
+
+
+   \fill[layer] (3,-0.25) coordinate(l4bl) -- (3.5,-0.25) coordinate(l4br)
+-- (3.5,0.25) coordinate(l4tr) -- (3,0.25) coordinate(l4tl) -- (3,-0.25);
+\end{tikzpicture}
+\column{.5\textwidth}
+\begin{center}
+\begin{block}{Other Evaluations}
+\begin{center}
+\begin{itemize}
+\item Lower LR \checkmark
+\pause
+\item Baseline add Layers \xmark
+\pause
+\item \color{black}{Tree net with 5 layers} \checkmark
+\pause
+\item \color{black}{Tree net with 6 layers} \checkmark
+\pause
+\item \color{black}{Tree net with \(>\) 6 layers} \xmark
+\pause
+\item \color{black}{Cross-Data-Set training} \xmark
+\pause
+\item \color{black}{Concat-Set training} \checkmark
+\end{itemize}
+\end{center}
+\end{block}
+\end{center}
+\end{columns}
 }
 \section{Post Processing}
+\subsection{Motivation}
 \frame{
-\frametitle{Evaluation Metrics}
+\frametitle{Output}
+\includegraphics[width=0.7\textwidth]{bilder/frenchCorrect}
+
 }
+
+\frame{
+\frametitle{Output}
+\includegraphics[width=1.0\textwidth]{bilder/cleaned}
+
+}
+
 \subsection{Smoothing Filters}
 \frame{
+\frametitle{Metrics}
+\begin{exampleblock}{Error Rate}
+\begin{center}
+\begin{itemize}
+\item Count outputs per language per frame
+\item Max count == actual language \(\rightarrow\) correct, false otherwise
+\item Metric is percentage of error per language
+\end{itemize}
+\end{center}
+\end{exampleblock}
+\pause
+\begin{exampleblock}{Out-Of-Language-Error (OLE)}
+\begin{center}
+\begin{itemize}
+\item Same counting as before
+\item Sum up FALSELY (as not equal to max language) classified languages
+\item Metric of ``Sureness'' of output
+\item Example: 50 frames classified as DE, 10 as EN, 5 as FR: \((5+10)/(5+10+50) = 0.23\)
+\item Average OLE per language
+\end{itemize}
+\end{center}
+\end{exampleblock}
+}
+
+\frame{
 \frametitle{Smoothing Filters}
+\begin{block}{Approaches}
+\begin{center}
+\begin{itemize}
+\item Counting Filter (count in window, in total as maximum only).
+\item Gaussian Filter (convolution with Gaussian kernel)
+\item Speech / Noise Filter
+\item Language Filter (If domain smaller than targets trained)
+\item Sequence Filter (longest sequence in window)
+\item Difference (Only count output if difference between 2 max is \(>\) thresh
+\item Weighted Average (FILTER capability)
+\end{itemize}
+\end{center}
+\end{block}
 }
 \section{Results}
 \frame{
-\frametitle{Results}
+\frametitle{Results I}
+\begin{tabular}{| l | c | r |}
+	\hline
+	\textbf{Filter} & \textbf{Overall Error TEST} & \textbf{OLE TEST} \\
+	\hline
+	Bare Net & 0.305 & 0.198 \\
+	\hline
+	Gaussian Filter (WS 15) & \textbf{0.307}  & 0.176 \\
+	\hline
+	Counting Filter (WS 100) & \textbf{0.307} & \textbf{0.006} \\
+	\hline
+	\textbf{Best} & \textbf{0.307} & \textbf{0.006} \\
+	\hline
+\end{tabular}
+}
+
+\frame{
+\frametitle{Results II}
+\begin{center}
+\begin{itemize}
+\item Euronews: Samples \(>\) 500 ms: 16 \% Error (10L)
+\item Lecture Data: 6.5 \% Error (3L, concat with Euronews data)
+\item European Parliament: 35 \% (7L, 3.5h/language)
+\item Post Processing: Counting, Gauss Filter promising, relative improvement OLE 97 \%.
+\end{itemize}
+\end{center}
+}
+
+\subsection{Demo}
+\frame{
+\frametitle{Demo (Easy)}
+\visible<1-1>{\movie[inlinesound, samplingrate=16000,bitspersample=16]{\fbox{Play}}{15.mp3}}
+\visible<2->{\begin{tabular}{| l |  r |}
+\hline
+\textbf{Language} & \textbf{Number of Frames classified} \\
+\hline
+English & 1095 \\
+German & 123 \\
+French & 18 \\
+\hline
+\textbf{Total Error} & 0.11 \\
+\hline
+\end{tabular}}
+}
+
+\frame{
+\frametitle{Demo (Hard)}
+\visible<1-1>{\movie[inlinesound, samplingrate=16000,bitspersample=16]{\fbox{Play}}{iwslt14Le.mp3}}
+\visible<2->{\begin{tabular}{| l |  r |}
+\hline
+\textbf{Language} & \textbf{Number of Frames classified} \\
+\hline
+English & 435 \\
+German & 53 \\
+French & 99\\
+\hline
+\textbf{Total Error} & 0.25 \\
+\hline
+\end{tabular}}
 }
 \frame{
 \frametitle{Future Work}
+\begin{center}
+\begin{itemize}
+\item RNNs \cite{gonzalez2014automatic}
+\pause
+\item Post-Processing promising, further validation or actual focus
+\pause
+\item Actual integration into online-environment like LT
+\end{itemize}
+\end{center}
 }
 \frame{
 \Huge{Questions?}
