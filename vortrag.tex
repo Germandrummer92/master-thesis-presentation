@@ -41,38 +41,26 @@
 
 \section{Related Work}
 \frame{
-\frametitle{Related Work I}
-\begin{block}{Historically}
+\frametitle{Related Work}
+\begin{block}{Non-NN-Approaches}
 \begin{center}
 \begin{itemize}
 \item single-language phone recognition followed by language-dependent,
 interpolated n-gram language modeling (PRLM)\cite{zissman1996comparison}
 \item multiple single-language phone recognizers and language-dependent parallel phone recognition (PPRM)\cite{zissman1996comparison}
-\pause
 \item Gaussian Mixture Models (GMM)s \cite{torres2002approaches}
-\end{itemize}
-\end{center}
-\end{block}
-}
-\frame{
-\frametitle{Related Work II}
-\begin{block}{Modern Approaches}
-\begin{center}
-\begin{itemize}
 \item Vector Space Modelling + PPRM\cite{4032773}
-\pause
 \item I-Vector approaches\cite{6680440}\cite{d2012phonotactic}
 \end{itemize}
 \end{center}
 \end{block}
 }
 \frame{
-\frametitle{Related Work III/Based on}
+\frametitle{Related Work II/Based on}
 \begin{block}{Similar Approaches}
 \begin{center}
 \begin{itemize}
 \item Matejka et. al\cite{matejka2014neural} similar setup: BNF \(\rightarrow\) LID, with averaging 5 LID nets. 
-\pause
 \item \cite{6289007} M. Heck et al. evaluate LID approaches prospect of Lecture Translator integration: PPRM/PRLM + Hybrid.
 \end{itemize}
 \end{center}
@@ -233,7 +221,7 @@ coordinate(l5_2tl) -- (4,-3.25);
 \item POWER
 \item lMEL
 \item PITCH
-\item TON
+\item TONE
 \end{itemize}
 \pause
 \item Context of 6 frames
@@ -506,9 +494,9 @@ coordinate(l5_2tl) -- (4,-3.25);
 \pause
 \item \color{black}{Tree net with \(>\) 6 layers} \xmark
 \pause
-\item \color{black}{Cross-Data-Set training} \xmark
+\item \color{black}{Cross-Data-Set training} \checkmark
 \pause
-\item \color{black}{Concat-Set training} \checkmark
+\item \color{black}{Concat-Set training} \checkmark \checkmark
 \end{itemize}
 \end{center}
 \end{block}
@@ -603,7 +591,7 @@ coordinate(l5_2tl) -- (4,-3.25);
 
 \subsection{Demo}
 \frame{
-\frametitle{Demo (Easy)}
+\frametitle{Demo (easy)}
 \visible<1-1>{\movie[inlinesound, samplingrate=16000,bitspersample=16]{\fbox{Play}}{15.mp3}}
 \visible<2->{\begin{tabular}{| l |  r |}
 \hline
@@ -619,7 +607,7 @@ French & 18 \\
 }
 
 \frame{
-\frametitle{Demo (Hard)}
+\frametitle{Demo (difficult)}
 \visible<1-1>{\movie[inlinesound, samplingrate=16000,bitspersample=16]{\fbox{Play}}{iwslt14Le.mp3}}
 \visible<2->{\begin{tabular}{| l |  r |}
 \hline
